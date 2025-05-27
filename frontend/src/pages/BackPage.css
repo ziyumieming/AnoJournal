@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+.background {
+    @apply relative w-full h-screen bg-black overflow-hidden z-0 flex justify-center;
+}
+
+.stars-container {
+    @apply absolute inset-0 z-5;
+    pointer-events: none;
+}
+
+.star {
+    @apply absolute bg-white rounded-full opacity-70;
+    width: 2px;
+    height: 2px;
+    animation: twinkle infinite;
+}
+
+.star::before,
+.star::after {
+    content: '';
+    position: absolute;
+    background-color: white;
+    opacity: 0.7;
+}
+
+.star::before {
+    width: 3px;
+    height: 1px;
+    /* 横向线条 */
+    top: 50%;
+    left: -25%;
+    transform: translateY(-50%);
+}
+
+.star::after {
+    width: 1px;
+    height: 3px;
+    /* 纵向线条 */
+    top: -25%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.content {
+    @apply relative z-20 text-white flex items-center justify-center h-full;
+}
+
+.text-container {
+    @apply text-center space-y-4;
+}
+
+.title {
+    @apply text-4xl font-bold;
+}
+
+.subtitle {
+    @apply text-lg opacity-80;
+}
+
+
+.city-container {
+    @apply absolute bottom-0 w-4/5 overflow-hidden z-10;
+    left: 0;
+    pointer-events: none;
+}
+
+.city-bottom {
+    @apply block w-full h-auto filter invert-10 sepia saturate-100 hue-rotate-180;
+    transform: translateY(20%);
+}
+
+.top-stars-container {
+    @apply absolute top-0 w-full flex justify-between items-center px-8 z-10;
+    height: 100px;
+    /* 设置顶部块的高度 */
+}
+
+.top-star {
+    @apply w-8 h-8;
+    /* 设置每个星星的大小 */
+}
+
+.big-star-container {
+    @apply relative z-1;
+    width: 50%;
+    height: auto;
+    left: 0;
+    pointer-events: auto;
+}
+
+.big-star {
+    @apply w-full h-auto;
+    transform: translateX(-30%) translateY(10%);
+    filter: drop-shadow(0 0 0 transparent);
+    transition: filter 0.5s ease-in, box-shadow 0.1s ease-out;
+}
+
+.big-star:hover {
+    filter: drop-shadow(0 0 10px rgba(243, 243, 241, 0.8));
+    /* 高亮边缘 */
+}
+
+
+.big-star:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+    background-size: 5px 5px;
+    /* 控制粒子间距 */
+    animation: particle-effect 0.5s infinite;
+}
+
+@keyframes particle-effect {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 2px 2px;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
