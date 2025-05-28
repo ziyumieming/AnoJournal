@@ -102,12 +102,12 @@
 .big-star {
     @apply w-full h-auto;
     transform: translateX(-30%) translateY(10%);
-    filter: drop-shadow(0 0 0 transparent);
+    filter: brightness(0.8) drop-shadow(0 0 20px rgba(100, 100, 100, 0.5));
     transition: filter 0.5s ease-in, box-shadow 0.1s ease-out;
 }
 
 .big-star-hover {
-    filter: drop-shadow(0 0 10px rgba(243, 243, 241, 0.8));
+    filter: brightness(1) drop-shadow(0 0 10px rgba(243, 243, 241, 0.8));
     /* ∏ﬂ¡¡±ﬂ‘µ */
 }
 
@@ -116,5 +116,5 @@
 }
 
 .particle-overlay {
-    @apply absolute top-0 left-0 w-full h-full z-20 bg-transparent pointer-events-auto
+    @apply absolute top-0 left-0 w-full h-full z-8 bg-transparent pointer-events-auto
 }

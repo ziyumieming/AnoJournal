@@ -46,7 +46,7 @@ function BackPage() {
           isMeteorActiveRef.current = true;
           cursor1Ref.current?.setActive(false);
           cursor2Ref.current?.setActive(true);
-          console.log("切换到 Cursor2");
+          // console.log("切换到 Cursor2");
         }
       } else {
         star.classList.remove('big-star-hover');
@@ -54,7 +54,7 @@ function BackPage() {
           isMeteorActiveRef.current = false;
           cursor1Ref.current?.setActive(true);
           cursor2Ref.current?.setActive(false);
-          console.log("切换到 Cursor1");
+          // console.log("切换到 Cursor1");
         }
       }
     };

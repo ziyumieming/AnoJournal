@@ -44,7 +44,7 @@ class MeteorMouseEffect {
   private TAIL_PARTICLE_LIFE_MIN = 25; // 帧 (约0.4s @ 60FPS)
   private TAIL_PARTICLE_LIFE_MAX = 50; // 帧 (约0.8s @ 60FPS)
   // private TAIL_PARTICLES_SPAWN_THRESHOLD_PX = 0.2; // 鼠标移动多少像素才产生粒子
-  private MAX_PARTICLES = 500; // 最大粒子总数
+  private MAX_PARTICLES = 5000; // 最大粒子总数
   private TAIL_OPACITY_BASE = 0.7;
   private MIN_DIST_FOR_ONE_TAIL_PARTICLE = 1; // 鼠标至少移动多少像素才产生第一个尾迹粒子
   private PIXELS_PER_ADDITIONAL_TAIL_PARTICLE = 2; // 每额外移动多少像素，再多产生一个尾迹粒子
@@ -194,6 +194,9 @@ class MeteorMouseEffect {
   }
 
   private handleClick(event: MouseEvent): void {
+    if (!this.isActive) {
+      return;
+    }
     // 1. 触发头部闪耀效果
     this.headFlareFramesRemaining = this.HEAD_FLARE_DURATION_FRAMES;
 

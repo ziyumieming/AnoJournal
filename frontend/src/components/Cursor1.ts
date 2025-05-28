@@ -65,7 +65,7 @@ class AdvancedParticleSystem {
 
   private STATIONARY_THRESHOLD_MS = 150; // 鼠标静止多少毫秒后判定为静止
 
-  private NUM_ORBITAL_PARTICLES = 60; // 静止时环绕的粒子数量
+  private NUM_ORBITAL_PARTICLES = 120; // 静止时环绕的粒子数量
   private ORBITAL_RADIUS_MIN = 20; // 轨道最小半径
   private ORBITAL_RADIUS_MAX = 40; // 轨道最大半径
   private ORBITAL_BASE_SPEED = 0.01; // 基础旋转速度 (弧度/帧)
@@ -79,7 +79,7 @@ class AdvancedParticleSystem {
   private DISPERSE_LIFE = 90; // 散开动画的生命周期 (帧)
   private DISPERSE_SNAP_DISTANCE = 2; // 散开时与目标多近则吸附过去
 
-  private TRAIL_PARTICLES_PER_MOVE = 2; // 每次鼠标移动（帧）产生的轨迹粒子数
+  private TRAIL_PARTICLES_PER_MOVE = 3; // 每次鼠标移动（帧）产生的轨迹粒子数
   private TRAIL_LIFE_MIN = 20; // 轨迹粒子最短生命周期
   private TRAIL_LIFE_MAX = 50; // 轨迹粒子最长生命周期
 
@@ -255,6 +255,9 @@ class AdvancedParticleSystem {
     event: MouseEvent,
     isDoubleClick: boolean
   ): void {
+    if (!this.isActive) {
+      return;
+    }
     // If a long press was active, click/dblclick might be suppressed or handled differently
     if (this.longPressInfo.isActive || this.longPressInfo.isDetecting) {
       // Potentially, a click during long press detection could cancel it,
@@ -299,6 +302,9 @@ class AdvancedParticleSystem {
   }
 
   private handleClick(event: MouseEvent): void {
+    if (!this.isActive) {
+      return;
+    }
     // Standard click might be part of a dblclick sequence.
     // We handle distinct behavior if needed, or let dblclick override.
     // For now, let click and dblclick have the same particle effect.
@@ -318,6 +324,9 @@ class AdvancedParticleSystem {
 
   // --- Long Press Handler Methods ---
   private handleMouseDownForLongPress(event: MouseEvent): void {
+    if (!this.isActive) {
+      return;
+    }
     if (event.button !== 0) return; // Only handle left mouse button
 
     this.longPressInfo.isDetecting = true;
@@ -437,6 +446,9 @@ class AdvancedParticleSystem {
   }
 
   private handleMouseMoveForLongPress(event: MouseEvent): void {
+    if (!this.isActive) {
+      return;
+    }
     if (this.longPressInfo.isDetecting && !this.longPressInfo.isActive) {
       const dx =
         event.clientX -
