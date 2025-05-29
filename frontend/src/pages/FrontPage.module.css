@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.background {
+    @apply relative w-full h-screen bg-sky-200 overflow-hidden z-0 flex justify-center;
+}
+
+
+.content {
+    @apply relative z-5 text-rose-300 flex items-center justify-center h-full;
+}
+
+.textContainer {
+    @apply text-center space-y-4;
+}
+
+.title {
+    @apply text-4xl font-bold;
+}
+
+.subtitle {
+    @apply text-lg opacity-80;
+}
+
+.cityContainer {
+    @apply absolute bottom-0 w-4/5 overflow-hidden z-10 left-0 pointer-events-none;
+}
+
+.cityBottom {
+    @apply block w-full h-auto;
+    transform: translateY(20%);
+}

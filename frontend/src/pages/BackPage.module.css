@@ -4,42 +4,28 @@
     @apply relative w-full h-screen bg-black overflow-hidden z-0 flex justify-center;
 }
 
-.stars-container {
-    @apply absolute inset-0 z-8;
-    pointer-events: none;
+.starsContainer {
+    @apply absolute inset-0 z-8 pointer-events-none;
 }
 
 .star {
-    @apply absolute bg-white rounded-full opacity-70;
-    width: 3px;
-    height: 3px;
-    animation: twinkle infinite;
+    @apply absolute bg-white rounded-full opacity-70 w-[3px] h-[3px] animate-[twinkle_infinite];
 }
 
 
 .star::before,
 .star::after {
     content: '';
-    position: absolute;
-    background-color: white;
-    opacity: 0.7;
+    @apply absolute bg-white opacity-70;
 }
 
 .star::before {
-    width: 4px;
-    height: 2px;
-    /* 横向线条 */
-    top: 50%;
-    left: 0%;
+    @apply w-[4px] h-[2px] top-1/2 left-0;
     transform: translateY(-50%) translateX(-12.5%);
 }
 
 .star::after {
-    width: 2px;
-    height: 4px;
-    /* 纵向线条 */
-    top: 0;
-    left: 50%;
+    @apply w-[2px] h-[4px] top-0 left-1/2;
     transform: translateX(-50%) translateY(-12.5%);
 }
 
@@ -60,7 +46,7 @@
     @apply relative z-5 text-white flex items-center justify-center h-full;
 }
 
-.text-container {
+.textContainer {
     @apply text-center space-y-4;
 }
 
@@ -73,48 +59,50 @@
 }
 
 
-.city-container {
-    @apply absolute bottom-0 w-4/5 overflow-hidden z-10;
-    left: 0;
-    pointer-events: none;
+.cityContainer {
+    @apply absolute bottom-0 w-4/5 overflow-hidden z-10 left-0 pointer-events-none;
 }
 
-.city-bottom {
+.cityBottom {
     @apply block w-full h-auto filter invert-10 sepia saturate-100 hue-rotate-180;
     transform: translateY(20%);
 }
 
-.top-stars-container {
-    @apply absolute top-0 w-full flex justify-between items-center px-8 z-10;
-    height: 100px;
-    /* 设置顶部块的高度 */
+.topStarsContainer {
+    @apply absolute top-0 w-full flex justify-between items-center px-8 z-10 h-[100px];
 }
 
-.top-star {
+.topStar {
     @apply w-8 h-8;
-    /* 设置每个星星的大小 */
+    filter: brightness(2) hue-rotate(-40deg);
+    transition: transform 0.3s ease-in, box-shadow 1s ease-out;
+    transform: rotate(var(--initial-star-rotation, 0deg));
 }
 
-.big-star-container {
+.topStarHover {
+    transform: rotate(calc(var(--initial-star-rotation, 0deg) + var(--hover-added-rotation, 0deg)));
+}
+
+.bigStarContainer {
     @apply relative z-5 w-1/2 h-auto left-0 pointer-events-auto;
 }
 
-.big-star {
+.bigStar {
     @apply w-full h-auto;
     transform: translateX(-30%) translateY(10%);
     filter: brightness(0.8) drop-shadow(0 0 20px rgba(100, 100, 100, 0.5));
     transition: filter 0.5s ease-in, box-shadow 0.1s ease-out;
 }
 
-.big-star-hover {
+.bigStarHover {
     filter: brightness(1) drop-shadow(0 0 10px rgba(243, 243, 241, 0.8));
     /* 高亮边缘 */
 }
 
-.particle-canvas {
+.particleCanvas {
     @apply absolute top-0 left-0 w-full h-full z-0 pointer-events-none;
 }
 
-.particle-overlay {
-    @apply absolute top-0 left-0 w-full h-full z-8 bg-transparent pointer-events-auto
+.particleOverlay {
+    @apply absolute top-0 left-0 w-full h-full z-12 bg-transparent pointer-events-auto
 }
