@@ -31,9 +31,9 @@ class MeteorMouseEffect {
 
   // --- 流星头部参数 ---
   private HEAD_CORE_SIZE_BASE = 2.5;
-  private HEAD_GLOW_COLOR_INNER = "rgba(255, 255, 240, 0.6)"; // 核心辉光颜色
+  // private HEAD_GLOW_COLOR_INNER = "rgba(255, 255, 240, 0.6)"; // 核心辉光颜色
   private HEAD_GLOW_COLOR_OUTER = "rgba(200, 220, 255, 0)"; // 外层辉光趋于透明和冷色调
-  private HEAD_CORE_COLOR = "rgba(255, 255, 255, 1)";
+  // private HEAD_CORE_COLOR = "rgba(255, 255, 255, 1)";
   private HEAD_GLOW_SIZE_FACTOR = 4; // 辉光大小是核心大小的倍数
   private HEAD_BRIGHTNESS_STATIONARY_FACTOR = 1.2; // 静止时亮度因子
   private HEAD_BRIGHTNESS_MOVING_FACTOR = 2.0; // 移动时亮度因子

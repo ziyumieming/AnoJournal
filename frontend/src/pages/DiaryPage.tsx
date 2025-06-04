@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 function DiaryPage() {
-  const [entry, setEntry] = useState('有人在黑夜中写下第一句话...');
+  const [entry] = useState('有人在黑夜中写下第一句话...');
   const [input, setInput] = useState('');
 
   const handleSubmit = () => {

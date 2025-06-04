@@ -1,11 +1,12 @@
-enum ParticleState {
-  ORBITAL, // 围绕静止的鼠标旋转
-  SHRINKING, // 当鼠标开始移动时，从轨道收缩到鼠标位置
-  TRAIL, // 鼠标移动时留在路径上的痕迹
-  DISPERSING_TO_ORBIT, // 新增：粒子从中心散开到轨道
-  EVENT_SHRINKING, // Shrinking due to click, dblclick, or long-press start
-  EXPLODING, // Diverging outwards after long-press release
-}
+const ParticleState = {
+  ORBITAL: 'ORBITAL', // 围绕静止的鼠标旋转
+  SHRINKING: 'SHRINKING', // 当鼠标开始移动时，从轨道收缩到鼠标位置
+  TRAIL: 'TRAIL', // 鼠标移动时留在路径上的痕迹
+  DISPERSING_TO_ORBIT: 'DISPERSING_TO_ORBIT', // 新增：粒子从中心散开到轨道
+  EVENT_SHRINKING: 'EVENT_SHRINKING', // Shrinking due to click, dblclick, or long-press start
+  EXPLODING: 'EXPLODING', // Diverging outwards after long-press release
+} as const;
+type ParticleState = (typeof ParticleState)[keyof typeof ParticleState];
 
 interface Particle {
   id: number;
@@ -95,7 +96,7 @@ class AdvancedParticleSystem {
   private EXPLODE_BASE_SPEED = 0.8; // Base speed for exploding particles
   private EXPLODE_SPEED_BOOST_PER_100MS = 0.2; // Additional speed per 100ms of long press duration
   private EXPLODE_LIFE = 100; // Lifespan of exploding particles
-  private EXPLODE_PARTICLE_COUNT_FACTOR = 1.5; // Multiply current interactive particles for explosion count
+  // private EXPLODE_PARTICLE_COUNT_FACTOR = 1.5; // Multiply current interactive particles for explosion count
   // ---
 
   private clickInfo = {
@@ -103,17 +104,27 @@ class AdvancedParticleSystem {
     shrinkTargetY: 0,
   };
 
-  private longPressInfo = {
-    detectorTimerId: null, // Timer for detecting long press
-    startTime: 0, // Timestamp of mousedown
-    startX: 0, // Mousedown X
-    startY: 0, // Mousedown Y
-    isDetecting: false, // True while mouse is down and timer is running
-    isActive: false, // True once long press threshold is met (while mouse is still down)
-    duration: 0, // Actual duration of the active long press
-    explosionCenterX: 0, // Center for explosion
-    explosionCenterY: 0,
-  };
+  private longPressInfo: {
+    detectorTimerId: ReturnType<typeof setTimeout> | null;
+    startTime: number;
+    startX: number;
+    startY: number;
+    isDetecting: boolean;
+    isActive: boolean;
+    duration: number;
+    explosionCenterX: number;
+    explosionCenterY: number;
+  } = {
+      detectorTimerId: null, // 初始为 null
+      startTime: 0,
+      startX: 0,
+      startY: 0,
+      isDetecting: false,
+      isActive: false,
+      duration: 0,
+      explosionCenterX: 0,
+      explosionCenterY: 0,
+    };
 
   // To manage global event listeners for long press correctly
   private boundHandleMouseUpForLongPress: (event: MouseEvent) => void;
@@ -214,7 +225,7 @@ class AdvancedParticleSystem {
     this.mouse.y = event.offsetY;
     // this.mouse.lastMoveTime = Date.now();
     if (!this.longPressInfo.isActive) {
-      const previousLastMoveTime = this.mouse.lastMoveTime;
+      // const previousLastMoveTime = this.mouse.lastMoveTime;
       this.mouse.lastMoveTime = Date.now();
       if (this.isMouseStationary) {
         // 如果之前是静止的，现在开始移动了
@@ -227,22 +238,19 @@ class AdvancedParticleSystem {
             p.state === ParticleState.ORBITAL ||
             p.state === ParticleState.DISPERSING_TO_ORBIT
           ) {
-            if (
-              p.state !== ParticleState.EVENT_SHRINKING &&
-              p.state !== ParticleState.EXPLODING
-            ) {
-              // Don't override active event states
-              p.state = ParticleState.SHRINKING;
-              p.life = this.SHRINK_LIFE;
-              p.initialLife = this.SHRINK_LIFE;
 
-              // 重置任何特定于四散或轨道状态的目标，因为它们不再相关
-              p.targetOrbitalX = undefined;
-              p.targetOrbitalY = undefined;
-              p.isDispersingTargetSet = false;
-              // p.orbitalAngle, p.orbitalRadius等轨道参数在SHRINKING状态下不需要
-              // vx, vy 将在 updateParticles 方法中为 SHRINKING 状态动态计算
-            }
+            // Don't override active event states
+            p.state = ParticleState.SHRINKING;
+            p.life = this.SHRINK_LIFE;
+            p.initialLife = this.SHRINK_LIFE;
+
+            // 重置任何特定于四散或轨道状态的目标，因为它们不再相关
+            p.targetOrbitalX = undefined;
+            p.targetOrbitalY = undefined;
+            p.isDispersingTargetSet = false;
+            // p.orbitalAngle, p.orbitalRadius等轨道参数在SHRINKING状态下不需要
+            // vx, vy 将在 updateParticles 方法中为 SHRINKING 状态动态计算
+
           }
         });
       }
