@@ -17,7 +17,6 @@ interface MeteorParticle {
 class MeteorMouseEffect {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private areaElement: HTMLElement; // 监听鼠标事件的区域
 
   private isActive = true;
   private animationFrameId: number | null = null; // 新增：存储动画帧ID
@@ -87,12 +86,11 @@ class MeteorMouseEffect {
   private STATIONARY_CHECK_INTERVAL_MS = 100; // 多久检查一次鼠标是否静止
   private headFlareFramesRemaining = 0; // 用于控制头部闪耀效果
 
-  constructor(canvasId: string, areaId: string) {
+  constructor(canvasId: string) {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-    this.areaElement = document.getElementById(areaId) as HTMLElement;
 
-    if (!this.canvas || !this.areaElement) {
-      console.error("Canvas or area element not found!");
+    if (!this.canvas) {
+      console.error("Canvas not found!");
       throw new Error("Required elements not found for MeteorMouseEffect.");
     }
 
@@ -121,36 +119,27 @@ class MeteorMouseEffect {
     }
   }
 
-  private resizeCanvas(): void {
-    this.canvas.width = this.areaElement.offsetWidth;
-    this.canvas.height = this.areaElement.offsetHeight;
+  public resizeCanvas(): void {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
   }
 
   private initEventListeners(): void {
     if (this.isActive) {
-      this.areaElement.addEventListener(
-        "mousemove",
-        this.handleMouseMove.bind(this)
-      );
-      this.areaElement.addEventListener(
-        "mouseleave",
-        this.handleMouseLeave.bind(this)
-      );
-      this.areaElement.addEventListener(
-        "mouseenter",
-        this.handleMouseEnter.bind(this)
-      ); // 可选，用于"点燃"
-      window.addEventListener("resize", this.resizeCanvas.bind(this));
-      this.areaElement.addEventListener("click", this.handleClick.bind(this));
+      window.addEventListener("mousemove", this.boundHandleMouseMove);
+      window.addEventListener("mouseleave", this.boundHandleMouseLeave);
+      window.addEventListener("mouseenter", this.boundHandleMouseEnter);
+      window.addEventListener("resize", this.boundResizeCanvas);
+      window.addEventListener("click", this.boundHandleClick);
     }
   }
 
   private removeEventListeners(): void {
-    this.areaElement.removeEventListener("mousemove", this.boundHandleMouseMove);
-    this.areaElement.removeEventListener("mouseleave", this.boundHandleMouseLeave);
-    this.areaElement.removeEventListener("mouseenter", this.boundHandleMouseEnter);
+    window.removeEventListener("mousemove", this.boundHandleMouseMove);
+    window.removeEventListener("mouseleave", this.boundHandleMouseLeave);
+    window.removeEventListener("mouseenter", this.boundHandleMouseEnter);
     window.removeEventListener("resize", this.boundResizeCanvas);
-    this.areaElement.removeEventListener("click", this.boundHandleClick);
+    window.removeEventListener("click", this.boundHandleClick);
   }
 
   public setActive(active: boolean) {
@@ -176,8 +165,8 @@ class MeteorMouseEffect {
   }
 
   private handleMouseMove(event: MouseEvent): void {
-    this.mouse.x = event.offsetX;
-    this.mouse.y = event.offsetY;
+    this.mouse.x = event.clientX;
+    this.mouse.y = event.clientY;
     this.mouse.isMoving = true;
     this.mouse.lastMoveTime = Date.now();
   }
@@ -201,8 +190,8 @@ class MeteorMouseEffect {
     this.headFlareFramesRemaining = this.HEAD_FLARE_DURATION_FRAMES;
 
     // 2. 在点击位置产生火花粒子
-    const clickX = event.offsetX;
-    const clickY = event.offsetY;
+    const clickX = event.clientX;
+    const clickY = event.clientY;
 
     for (let i = 0; i < this.SPARK_ON_CLICK_COUNT; i++) {
       if (this.particles.length < this.MAX_PARTICLES) {

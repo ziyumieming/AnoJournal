@@ -43,7 +43,6 @@ class AdvancedParticleSystem {
   private particles: Particle[] = [];
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private areaElement: HTMLElement;
   private particleIdCounter = 0;
 
   private mouse = { x: 0, y: 0, lastMoveTime: Date.now() };
@@ -130,12 +129,11 @@ class AdvancedParticleSystem {
   private boundHandleMouseUpForLongPress: (event: MouseEvent) => void;
   private boundHandleMouseMoveForLongPress: (event: MouseEvent) => void;
 
-  constructor(canvasId: string, areaId: string) {
+  constructor(canvasId: string) {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-    this.areaElement = document.getElementById(areaId) as HTMLElement;
 
-    if (!this.canvas || !this.areaElement)
-      throw new Error("Canvas or area element not found!");
+    if (!this.canvas)
+      throw new Error("Canvas not found!");
 
     const ctx = this.canvas.getContext("2d");
     if (!ctx) throw new Error("Failed to get 2D context.");
@@ -156,31 +154,31 @@ class AdvancedParticleSystem {
     }
   }
 
-  private resizeCanvas(): void {
-    this.canvas.width = this.areaElement.offsetWidth;
-    this.canvas.height = this.areaElement.offsetHeight;
+  public resizeCanvas(): void {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
   }
 
   private initEventListeners(): void {
     if (this.isActive) {
-      this.areaElement.addEventListener(
+      window.addEventListener(
         "mousemove",
         this.handleMouseMove.bind(this)
       );
       // 当鼠标移出区域时，我们可能希望清除所有粒子或停止动画
-      this.areaElement.addEventListener(
+      window.addEventListener(
         "mouseleave",
         this.handleMouseLeave.bind(this)
       );
       window.addEventListener("resize", this.resizeCanvas.bind(this));
 
       // New listeners
-      this.areaElement.addEventListener("click", this.handleClick.bind(this));
-      this.areaElement.addEventListener(
+      window.addEventListener("click", this.handleClick.bind(this));
+      window.addEventListener(
         "dblclick",
         this.handleDoubleClick.bind(this)
       );
-      this.areaElement.addEventListener(
+      window.addEventListener(
         "mousedown",
         this.handleMouseDownForLongPress.bind(this)
       );
@@ -189,12 +187,12 @@ class AdvancedParticleSystem {
   }
 
   private removeEventListeners(): void {
-    this.areaElement.removeEventListener("mousemove", this.boundHandleMouseMove);
-    this.areaElement.removeEventListener("mouseleave", this.boundHandleMouseLeave);
+    window.removeEventListener("mousemove", this.boundHandleMouseMove);
+    window.removeEventListener("mouseleave", this.boundHandleMouseLeave);
     window.removeEventListener("resize", this.boundResizeCanvas);
-    this.areaElement.removeEventListener("click", this.boundHandleClick);
-    this.areaElement.removeEventListener("dblclick", this.boundHandleDoubleClick);
-    this.areaElement.removeEventListener("mousedown", this.boundHandleMouseDownForLongPress);
+    window.removeEventListener("click", this.boundHandleClick);
+    window.removeEventListener("dblclick", this.boundHandleDoubleClick);
+    window.removeEventListener("mousedown", this.boundHandleMouseDownForLongPress);
   }
 
   // 新增方法：用于顶层切换
@@ -221,8 +219,8 @@ class AdvancedParticleSystem {
   }
 
   private handleMouseMove(event: MouseEvent): void {
-    this.mouse.x = event.offsetX;
-    this.mouse.y = event.offsetY;
+    this.mouse.x = event.clientX
+    this.mouse.y = event.clientY;
     // this.mouse.lastMoveTime = Date.now();
     if (!this.longPressInfo.isActive) {
       // const previousLastMoveTime = this.mouse.lastMoveTime;
@@ -259,10 +257,7 @@ class AdvancedParticleSystem {
   }
 
   // --- Click and Double Click Handler ---
-  private handleClickOrDoubleClick(
-    event: MouseEvent,
-    isDoubleClick: boolean
-  ): void {
+  private handleClickOrDoubleClick(event: MouseEvent, isDoubleClick: boolean): void {
     if (!this.isActive) {
       return;
     }
@@ -277,8 +272,8 @@ class AdvancedParticleSystem {
       return;
     }
 
-    this.clickInfo.shrinkTargetX = event.offsetX;
-    this.clickInfo.shrinkTargetY = event.offsetY;
+    this.clickInfo.shrinkTargetX = event.clientX;
+    this.clickInfo.shrinkTargetY = event.clientY;
     this.isMouseStationary = false; // Force system to react, mouse might be actually stationary
 
     this.particles.forEach((p) => {
@@ -303,8 +298,8 @@ class AdvancedParticleSystem {
     // (orbital if stationary at click point, or trail/shrinking if mouse moves away).
     // This provides the "continue into surround state" by fresh generation.
     // To make the regeneration point the click location if mouse is still:
-    this.mouse.x = event.offsetX;
-    this.mouse.y = event.offsetY;
+    this.mouse.x = event.clientX;
+    this.mouse.y = event.clientY;
     this.mouse.lastMoveTime = Date.now() - (this.STATIONARY_THRESHOLD_MS + 10); // Trick to make it stationary
     this.updateSystemState(); // Force re-evaluation of stationary state
   }
@@ -340,10 +335,10 @@ class AdvancedParticleSystem {
     this.longPressInfo.isDetecting = true;
     this.longPressInfo.isActive = false;
     this.longPressInfo.startTime = Date.now();
-    this.longPressInfo.startX = event.offsetX;
-    this.longPressInfo.startY = event.offsetY;
-    this.longPressInfo.explosionCenterX = event.offsetX; // Store for potential explosion
-    this.longPressInfo.explosionCenterY = event.offsetY;
+    this.longPressInfo.startX = event.clientX;
+    this.longPressInfo.startY = event.clientY;
+    this.longPressInfo.explosionCenterX = event.clientX; // Store for potential explosion
+    this.longPressInfo.explosionCenterY = event.clientY;
 
     // Clear any previous timer
     if (this.longPressInfo.detectorTimerId) {
@@ -458,14 +453,9 @@ class AdvancedParticleSystem {
       return;
     }
     if (this.longPressInfo.isDetecting && !this.longPressInfo.isActive) {
-      const dx =
-        event.clientX -
-        (this.areaElement.getBoundingClientRect().left +
-          this.longPressInfo.startX);
-      const dy =
-        event.clientY -
-        (this.areaElement.getBoundingClientRect().top +
-          this.longPressInfo.startY);
+      const dx = event.clientX - this.longPressInfo.startX;
+      const dy = event.clientY - this.longPressInfo.startY;
+
       if (
         Math.sqrt(dx * dx + dy * dy) > this.LONG_PRESS_MAX_MOVE_THRESHOLD_PX
       ) {

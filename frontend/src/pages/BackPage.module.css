@@ -42,12 +42,12 @@
     }
 }
 
-.content {
-    @apply relative z-5 text-white flex items-center justify-center h-full;
-}
+/* .content {
+    @apply relative z-5 text-white text-center flex items-center justify-center h-full;
+} */
 
 .textContainer {
-    @apply text-center space-y-4;
+    @apply space-y-4;
 }
 
 .title {
@@ -83,26 +83,40 @@
     transform: rotate(calc(var(--initial-star-rotation, 0deg) + var(--hover-added-rotation, 0deg)));
 }
 
-.bigStarContainer {
-    @apply relative z-5 w-1/2 h-auto left-0 pointer-events-auto;
-}
+/* .bigStarContainer {
+    @apply relative z-2 w-1/2 h-auto left-0 pointer-events-auto;
+} */
 
 .bigStar {
     @apply w-full h-auto;
-    transform: translateX(-30%) translateY(10%);
+    /* transform: translateX(-30%) translateY(10%); */
     filter: brightness(0.8) drop-shadow(0 0 20px rgba(100, 100, 100, 0.5));
     transition: filter 0.5s ease-in, box-shadow 0.1s ease-out;
 }
 
 .bigStarHover {
     filter: brightness(1) drop-shadow(0 0 10px rgba(243, 243, 241, 0.8));
-    /* ������Ե */
+    /* ¸ßÁÁ±ßÔµ */
 }
 
 .particleCanvas {
-    @apply absolute top-0 left-0 w-full h-full z-0 pointer-events-none;
+    @apply absolute top-0 left-0 w-full h-full z-4 pointer-events-none;
 }
 
-.particleOverlay {
-    @apply absolute top-0 left-0 w-full h-full z-12 bg-transparent pointer-events-auto
+.fixedSidesContainer {
+    @apply relative flex w-full h-full items-center justify-between;
+    /* 可根据需要设置最大宽度和居中 */
+}
+
+.bigStarContainer {
+    @apply flex-shrink-0 flex-grow-0 w-1/2 h-auto pointer-events-auto z-2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    transform: translateX(10%) translateY(10%);
+}
+
+.content {
+    @apply flex-shrink-0 flex-grow-0 w-1/2 h-full flex items-center text-white text-center z-5;
+    transform: translateX(30%);
 }
