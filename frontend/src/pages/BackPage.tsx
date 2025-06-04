@@ -117,7 +117,7 @@ function BackPage({ children }: Props) {
   }, []);
 
   const topStars = useMemo(() => (
-    [...Array(15)].map((_, i) => {
+    [...Array(15)].map(() => {
       const randomMarginLeft = Math.random() * 40 - 20;
       const randomMarginTop = Math.random() * 40;
       const randomRotation = Math.random() * 360;
@@ -132,7 +132,7 @@ function BackPage({ children }: Props) {
   ), []);
 
   const stars = useMemo(() => (
-    [...Array(80)].map((_, i) => ({
+    [...Array(80)].map(() => ({
       top: Math.random() * 100,
       left: Math.random() * 100,
       animationDuration: 2 + Math.random() * 3,
