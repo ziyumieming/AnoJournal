@@ -117,6 +117,6 @@
 }
 
 .content {
-    @apply flex-shrink-0 flex-grow-0 w-1/2 h-full flex items-center text-white text-center z-5;
-    transform: translateX(30%);
+    @apply flex-shrink-0 flex-grow-0 w-3/7 h-full flex items-center text-white text-center z-5;
+    /* transform: translateX(30%); */
 }
